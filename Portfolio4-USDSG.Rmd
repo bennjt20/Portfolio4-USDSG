@@ -1,0 +1,99 @@
+---
+title: "Portfolio4-USDSG"
+output: html_document
+date: '2022-04-06'
+---
+
+---
+title: "Gender Trends in U.S. Suicide and Depression, 2006-2015"
+output: html_document
+date: 'April 5, 2022'
+---
+
+For this project, I wanted to take the concept of disaggregation and apply that visually. Specifically, I want to disaggregate suicide rates and rates of depression by gender. Doing this shows that men and women have dramatically different rates of both suicide and depression. By visualizing these gender differences one is struck by the need to explore additional variables that come into play for men and women, respectively. 
+
+1) First, installing packages / libraries. 
+
+```{r Library}  
+library(ggplot2)
+library(tidyr)
+```
+
+```{r Finding object} 
+library(readr)
+SD_Data <- read_csv("~/Documents/GitHub/Portfolio4-USDSG/SDData.csv") 
+View(SD_Data)
+```
+
+1) Let's take a look at our basic plot
+```{r Scatterplot1}
+ggplot(data = SD_Data, aes(x= Time, y = Value)) +
+   geom_point(alpha = 0.7, show.legend = FALSE) +
+   labs(title = 'Year: 2006-2015', x = 'Year', y = 'Number of Deaths / Suicides')
+```
+
+2) We need to designate what these data points represent, using labels and colors. We know we're dealing with Sex, so let's start with that. 
+```{r Scatterplot2} 
+ggplot(data = SD_Data, aes(x= Time, y = Value, color=Sex)) +
+   geom_point(alpha = 0.7) +
+   labs(title = 'Year: 2006-2015', x = 'Year', y = 'Number of Deaths / Suicides', color = "Sex")
+```
+
+That is significantly better. R automatically gave us colors that sort of symbolize the underlying construct, or at least provide an intuitive color designation for the variable Sex. What's missing is that we can not tell the two behavioral variables apart from one another. So we need to assign some form of label to these two M/F variables in a way that still maintains the gender designations.
+
+One way would be to concatenate the data. Let's create a SexSubject variable. Instead of just plotting sex, which gives us 4 different plotted variables with two colors, we can start to distinguish the four different outcomes.   
+
+3) Plotting the new SexSubject variable.
+```{r Scatterplot3} 
+ggplot(data = SD_Data, aes(x= Time, y = Value, color=SexSubject)) +
+   geom_point(alpha = 0.7) +
+   labs(title = 'Year: 2006-2015', x = 'Year', y = 'Number of Deaths / Suicides', color = "Suicide and Depression, by Sex")
+```
+
+This is a step forward because we now clearly identify the four different categories we're interested in. However, we've lost the intuitive aspect of the color system. 
+
+4) We could try to fine-tune the colors. For instance, using light red for female depression and dark red for female suicide. We'll try that. 
+
+```{r Scatterplot5}  
+colors <- c("Male Suicide" = "blue1", "Female Suicide" = "firebrick1", "Male Depression" = "lightblue2", "Female Depression" = "lightpink")
+ggplot(SD_Data, aes(x=Time)) +
+  geom_point(aes(y = maleS, color = "Male Suicide"), size = 1.5) +
+  geom_point(aes(y = maleDep, color = "Male Depression"), size = 1.5) +
+  geom_point(aes(y = femaleS, color = "Female Suicide"), size = 1.5) +
+  geom_point(aes(y = femaleDep, color = "Female Depression"), size = 1.5) +
+labs(                                
+   x = "Date",
+   y = "Number of Deaths / Suicides",
+   color = "Suicide and Depression, by Sex"
+ ) +
+scale_color_manual(values = colors) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1))
+```
+
+This is a better visual. However, even using sharply contrasting colors leaves us with room for improvement. 
+
+5) To make the meaning of the data points even more obvious, shapes would probably help. 
+
+```{r Scatterplot6} 
+colors <- c("Male Suicide" = "blue1", "Female Suicide" = "firebrick1", "Male Depression" = "lightblue2", "Female Depression" = "lightpink")
+ggplot(SD_Data, aes(x=Time)) +
+  geom_point(aes(y = maleS, color = "Male Suicide"), size = 2) +
+  geom_point(aes(y = maleDep, color = "Male Depression"), shape = 18, size = 2) +
+  geom_point(aes(y = femaleS, color = "Female Suicide"), size = 2) +
+  geom_point(aes(y = femaleDep, color = "Female Depression"), shape = 18, size = 2) +
+labs(                                
+   x = "Date",
+   y = "Number of Deaths / Suicides",
+   color = "Suicide and Depression, by Sex"
+ ) +
+scale_color_manual(values = colors) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1))
+```
+
+This matches the design that, in my opinion, depicts the categories in a manner that is easily digestible visually, and intuitive. 
+Men have remarkably higher rates of suicide than women, while having similar or even lower rates of depression. The trend lines for men tend to indicate two different trajectories where one segment of the male population grows slightly less depressed while another segment grows more suicidal. That would be a more likely explanation for the divergence of male suicide from male depression. 
+On the other hand, there could be a rather more complicated explanation. The male population may be growing less inclined to report depression while simultaneously becoming more likely to commit suicide. In any event, by visualizing the gender differences and variations in these trends, it becomes clear that broad explanations are insufficient.
+
+In terms of the layout, the legend needs a bit of improvement. I spent way too long trying to get the legend icon shapes to match the shape of the data points in the graph. That will have to wait for another day!
