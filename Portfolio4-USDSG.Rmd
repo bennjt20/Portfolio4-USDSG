@@ -21,20 +21,21 @@ library(tidyr)
 
 ```{r Finding object} 
 library(readr)
-SD_Data <- read_csv("~/Documents/GitHub/Portfolio4-USDSG/SDData.csv") 
-View(SD_Data)
+SDData <- read_csv("~/Documents/GitHub/Portfolio4-USDSG/SDData.csv") 
+View(SDData)
 ```
+
 
 1) Let's take a look at our basic plot
 ```{r Scatterplot1}
-ggplot(data = SD_Data, aes(x= Time, y = Value)) +
+ggplot(data = SDData, aes(x= Time, y = Value)) +
    geom_point(alpha = 0.7, show.legend = FALSE) +
    labs(title = 'Year: 2006-2015', x = 'Year', y = 'Number of Deaths / Suicides')
 ```
 
 2) We need to designate what these data points represent, using labels and colors. We know we're dealing with Sex, so let's start with that. 
 ```{r Scatterplot2} 
-ggplot(data = SD_Data, aes(x= Time, y = Value, color=Sex)) +
+ggplot(data = SDData, aes(x= Time, y = Value, color=Sex)) +
    geom_point(alpha = 0.7) +
    labs(title = 'Year: 2006-2015', x = 'Year', y = 'Number of Deaths / Suicides', color = "Sex")
 ```
@@ -45,7 +46,7 @@ One way would be to concatenate the data. Let's create a SexSubject variable. In
 
 3) Plotting the new SexSubject variable.
 ```{r Scatterplot3} 
-ggplot(data = SD_Data, aes(x= Time, y = Value, color=SexSubject)) +
+ggplot(data = SDData, aes(x= Time, y = Value, color=SexSubject)) +
    geom_point(alpha = 0.7) +
    labs(title = 'Year: 2006-2015', x = 'Year', y = 'Number of Deaths / Suicides', color = "Suicide and Depression, by Sex")
 ```
@@ -54,9 +55,11 @@ This is a step forward because we now clearly identify the four different catego
 
 4) We could try to fine-tune the colors. For instance, using light red for female depression and dark red for female suicide. We'll try that. 
 
+
+
 ```{r Scatterplot5}  
 colors <- c("Male Suicide" = "blue1", "Female Suicide" = "firebrick1", "Male Depression" = "lightblue2", "Female Depression" = "lightpink")
-ggplot(SD_Data, aes(x=Time)) +
+ggplot(SDData, aes(x=Time)) +
   geom_point(aes(y = maleS, color = "Male Suicide"), size = 1.5) +
   geom_point(aes(y = maleDep, color = "Male Depression"), size = 1.5) +
   geom_point(aes(y = femaleS, color = "Female Suicide"), size = 1.5) +
@@ -77,17 +80,18 @@ This is a better visual. However, even using sharply contrasting colors leaves u
 
 ```{r Scatterplot6} 
 colors <- c("Male Suicide" = "blue1", "Female Suicide" = "firebrick1", "Male Depression" = "lightblue2", "Female Depression" = "lightpink")
-ggplot(SD_Data, aes(x=Time)) +
+ggplot(SDData, aes(x=Year)) +
   geom_point(aes(y = maleS, color = "Male Suicide"), size = 2) +
   geom_point(aes(y = maleDep, color = "Male Depression"), shape = 18, size = 2) +
   geom_point(aes(y = femaleS, color = "Female Suicide"), size = 2) +
   geom_point(aes(y = femaleDep, color = "Female Depression"), shape = 18, size = 2) +
 labs(                                
    x = "Date",
-   y = "Number of Deaths / Suicides",
+   y = "Suicide Rate (deaths per 100,000) by Sex, and Depression (% of 100) by Sex",
    color = "Suicide and Depression, by Sex"
  ) +
 scale_color_manual(values = colors) +
+scale_x_continuous(breaks = 2006:2015) +
 theme(text = element_text(size=7),
         axis.text.x = element_text(angle=45, hjust=1))
 ```
@@ -97,3 +101,29 @@ Men have remarkably higher rates of suicide than women, while having similar or 
 On the other hand, there could be a rather more complicated explanation. The male population may be growing less inclined to report depression while simultaneously becoming more likely to commit suicide. In any event, by visualizing the gender differences and variations in these trends, it becomes clear that broad explanations are insufficient.
 
 In terms of the layout, the legend needs a bit of improvement. I spent way too long trying to get the legend icon shapes to match the shape of the data points in the graph. That will have to wait for another day!
+
+
+```{r JustDepandSuicide} 
+colors <- c("Suicide" = "orange", "Dep" = "purple")
+ggplot(SDData, aes(x=Year)) +
+  geom_point(aes(y = Dep, color = "Dep"), size = 2) +
+  geom_point(aes(y = Suicide, color = "Suicide"), size = 3) +
+labs(                                
+   x = "Date",
+   y = "Suicide Rate (deaths per 100,000) and Depression (% of 100)",
+   color = "Suicide and Depression, by Sex"
+ ) +
+scale_x_continuous(breaks = 2006:2015) +
+scale_color_manual(values = colors) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1))
+```
+
+``{r str(data)- supposed to get data on the data type} 
+str(data)
+```
+
+``{r AsDate- supposed to convert data type} 
+as.Date(Time)
+```
+
