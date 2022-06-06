@@ -108,6 +108,7 @@ colors <- c("Suicide" = "orange", "Dep" = "purple")
 ggplot(SDData, aes(x=Year)) +
   geom_point(aes(y = Dep, color = "Dep"), size = 2) +
   geom_point(aes(y = Suicide, color = "Suicide"), size = 3) +
+  ylim(0, 25) +
 labs(                                
    x = "Date",
    y = "Suicide Rate (deaths per 100,000) and Depression (% of 100)",
@@ -118,6 +119,27 @@ scale_color_manual(values = colors) +
 theme(text = element_text(size=7),
         axis.text.x = element_text(angle=45, hjust=1))
 ```
+
+
+```{r Better icon size for PPT} 
+colors <- c("Male Suicide" = "blue1", "Female Suicide" = "firebrick1", "Male Depression" = "lightblue2", "Female Depression" = "lightpink")
+ggplot(SDData, aes(x=Year)) +
+  geom_point(aes(y = maleS, color = "Male Suicide"), size = 3) +
+  geom_point(aes(y = maleDep, color = "Male Depression"), size = 3) +
+  geom_point(aes(y = femaleS, color = "Female Suicide"), size = 3) +
+  geom_point(aes(y = femaleDep, color = "Female Depression"), size = 3) +
+  ylim(0, 25) +
+labs(                                
+   x = "Date",
+   y = "Suicide Rate (deaths per 100,000) by Sex, and Depression (% of 100) by Sex",
+   color = "Suicide and Depression, by Sex"
+ ) +
+scale_color_manual(values = colors) +
+scale_x_continuous(breaks = 2006:2015) +
+theme(text = element_text(size=7),
+        axis.text.x = element_text(angle=45, hjust=1))
+```
+
 
 ``{r str(data)- supposed to get data on the data type} 
 str(data)
